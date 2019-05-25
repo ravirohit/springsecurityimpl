@@ -1,0 +1,26 @@
+About:
+-> we are creating Spring REST mvc application without use of spring-config.xml and web.xml file implementation.
+-> Concept we have implemented:
+   
+====================== Q&A ================================
+Q) what is difference between traditional Spring MVC controller and the RESTful web service controller?
+Ans: he traditional MVC controller relies on the View technology, the RESTful web service controller simply returns the object and the object data is 
+     written directly to the HTTP response as JSON/XML. 
+   -> only difference is how the response will be sending to the client from server which was in old architecture:
+      Requests are processed by the Controller and the response is returned to the DispatcherServlet which then dispatches to the view. 
+Q) @Controller vs @ResponseBody vs. @RestController
+Ans:  @ResponseBody: for some particular controller method, if we want to return data directly from the controller, without looking for a view, 
+             using the @ResponseBody annotation on a method will do this. 
+          -> Spring converts the return value and writes it to the HTTP response automatically. Each method in the Controller class must be annotated with 
+             @ResponseBody.
+      @RestController: now even if want to implement REST MVC architecture, still we have to use @ResponseBody on each method of the controller. which is simplified 
+             by the use of @RestController. Meaning, instead of declaring @ResponseBody for each method we can provide only one annotation @RestController
+             instead of @Controller on class level and it will work fine.
+          -> This feature is available from spring version 4.0 
+          
+          
+================= SpringSecurity =========
+Q) how to create a custom Spring-based UserDetailsService backed by persistent data.
+Ans: https://www.baeldung.com/spring-security-authentication-with-a-database
+
+             
