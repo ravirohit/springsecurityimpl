@@ -1,6 +1,9 @@
 About:
 -> we are creating Spring REST mvc application without use of spring-config.xml and web.xml file implementation.
 -> Concept we have implemented:
+
+------------------ Annotation Used ---------------
+@RestController, @Controller, @ResponseBody, @PathParam, @RequestParam
    
 ====================== Q&A ================================
 Q) what is difference between traditional Spring MVC controller and the RESTful web service controller?
