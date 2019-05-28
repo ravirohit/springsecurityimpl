@@ -3,8 +3,12 @@ About:
 -> Concept we have implemented:
 
 ------------------ Annotation Used ---------------
-@RestController, @Controller, @ResponseBody, @PathParam, @RequestParam
-   
+@RestController, @Controller, @ResponseBody, @PathParam, @RequestParam,
+@ResponseStatus, @ExceptionHandler
+@ComponentScans(value = { 
+      @ComponentScan("com.boraji.tutorial.spring.dao"),
+      @ComponentScan("com.boraji.tutorial.spring.service") 
+    })
 ====================== Q&A ================================
 Q) what is difference between traditional Spring MVC controller and the RESTful web service controller?
 Ans: he traditional MVC controller relies on the View technology, the RESTful web service controller simply returns the object and the object data is 
@@ -26,4 +30,20 @@ Ans:  @ResponseBody: for some particular controller method, if we want to return
 Q) how to create a custom Spring-based UserDetailsService backed by persistent data.
 Ans: https://www.baeldung.com/spring-security-authentication-with-a-database
 
+
+==================== Learning ---------------
+RestTemplate: it is template provided by spring to make a rest api call.
+    Example: 
+        ResponseEntity<String> exchange = resttemplate.exchange(url, HttpMethod.GET, null, String.class);
+        String body = exchange.getBody();
+-> UUID.randomUUID().toString();	
+-> to check how long it takes to process request:
+   long time = System.currentTimeMillis();
+   chain.doFilter(request,response);
+   long delta = System.currentTimeMillis();
+   System.out.println("time take to process the request:"+(delta - time));
+   
+   long
+
+        
              
