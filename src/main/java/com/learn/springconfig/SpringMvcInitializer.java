@@ -2,12 +2,12 @@ package com.learn.springconfig;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-public class SpringMvcInitializer 
+/*public class SpringMvcInitializer 
 extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { SecurityConfig.class, DbConfiguration.class };
+		return new Class[] { SecurityConfig.class, DbConfiguration.class,ApplicationContextConfig.class };
 	}
 	
 	@Override
@@ -17,7 +17,7 @@ extends AbstractAnnotationConfigDispatcherServletInitializer {
 	
 	@Override
 	protected String[] getServletMappings() {
-		return new String[] { "/" };
+		return new String[] { "/login","/"};
 	}
 
-}
+}*/

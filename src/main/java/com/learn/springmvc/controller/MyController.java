@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@RequestMapping("/admin")
+//@RequestMapping("/rest")
 public class MyController {
 	//@ResponseBody
 	// @RequestMapping(value = "/{name}.xml", method = RequestMethod.GET, produces = "application/xml")
@@ -23,7 +23,7 @@ public class MyController {
 		System.out.println("loging page method called");
 		return  "login done";
 	}*/
-	@GetMapping(value= { "/", "/welcome**" }, produces = "application/json")    
+	@GetMapping(value= { "/welcome**" }, produces = "application/json")    
     public ZonedDateTime currentTime(){
         System.out.println("currentTime: ZoneDate time:"+ZonedDateTime.now());
         return ZonedDateTime.now();

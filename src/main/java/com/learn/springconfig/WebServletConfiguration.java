@@ -11,17 +11,19 @@ import org.springframework.web.servlet.DispatcherServlet;
 
 
 // Replacing Web.xml
-/*public class WebServletConfiguration implements WebApplicationInitializer{
+public class WebServletConfiguration implements WebApplicationInitializer{
 	
 	
     public void onStartup(ServletContext ctx) throws ServletException {
         AnnotationConfigWebApplicationContext webCtx = new AnnotationConfigWebApplicationContext();
         //webCtx.register(SpringConfig.class);   
-        webCtx.register(WebSecurityConfig.class);
+        webCtx.register(new Class[]{SecurityConfig.class,DbConfiguration.class,ApplicationContextConfig.class});
         webCtx.setServletContext(ctx);
         ServletRegistration.Dynamic servlet = ctx.addServlet("dispatcher", new DispatcherServlet(webCtx));
         servlet.setLoadOnStartup(1);
-        servlet.addMapping("/");
+       // servlet.addMapping("/");
+        servlet.addMapping("/api/*");
+        //servlet.addMapping("/");
         ctx.addFilter("delegatingFilterProxy", DelegatingFilterProxy.class).addMappingForUrlPatterns(null, false, "dispatcher");
     }
-}*/
+}

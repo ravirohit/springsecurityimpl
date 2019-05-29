@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationEn
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableWebMvc                                // <mvc:annotation-driven/
+//@EnableWebMvc                                // <mvc:annotation-driven/
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = "com.learn")   // <context:component-scan/>
@@ -46,18 +46,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		  auth.inMemoryAuthentication().withUser("admin").password("{noop}123456").roles("ADMIN");
 		  auth.inMemoryAuthentication().withUser("dba").password("{noop}123456").roles("DBA");
 	  
-	  
-	  
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 
-
 	  http.authorizeRequests()
-		.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/dba/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')")
-		.and().formLogin();
+		.antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
+		.antMatchers("/api/dba/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')")
+		.and().formLogin();//.loginPage("/customLogin.html");
 		
 	}
 	/*private void loginSuccessHandler(
