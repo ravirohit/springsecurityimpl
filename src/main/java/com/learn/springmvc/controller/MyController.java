@@ -1,7 +1,10 @@
 package com.learn.springmvc.controller;
 
+import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -37,6 +40,15 @@ public class MyController {
 	public String dbaPage() {
 		System.out.println("ZonedDateTime.now(ZoneId.of(\"UTC\")): "+ZonedDateTime.now(ZoneId.of("UTC")));
 		return  "dbapage method called";
+	}
+	@GetMapping(value="/login")
+	public void loginRedirect(HttpServletResponse response){
+		try {
+			System.out.println("login method get called");
+			response.sendRedirect("/springsecurityimpl/customLogin.html");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }

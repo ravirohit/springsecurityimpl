@@ -1,3 +1,6 @@
+-------------------- Link ---------------
+https://www.javainterviewpoint.com/spring-security-custom-login/
+==============
 About:
 -> we are creating Spring REST mvc application without use of spring-config.xml and web.xml file implementation.
 -> Concept we have implemented:
@@ -27,8 +30,82 @@ Ans:  @ResponseBody: for some particular controller method, if we want to return
           
           
 ================= SpringSecurity =========
+-> Note: in the applcation, either of the file(WebServletConfiguration.java or SpringMvcInitializer.java) will fulfill the purpose of web.xml file.
+         So any one at a time can be enabled and it will work fine. 
+-> in Spring, security is implemented using DelegatingFilterProxy. To register it, with spring container in Java configuration, you shall use 
+   AbstractSecurityWebApplicationInitializer.
+-> The spring will detect the instance of this class during application startup, and register the DelegatingFilterProxy to use the 
+   springSecurityFilterChain before any other registered Filter. It also register a ContextLoaderListener.
+   Code: 
+		public class SpringSecurityInitializer extends AbstractSecurityWebApplicationInitializer {
+		    //no code needed
+		}
+
+------------------ Q&A ------------------
+Q) How can we provide custom login page?
+Ans:  http.authorizeRequests()
+          ...
+          .and().formLogin().loginPage("login.html")
+Q) for custom login page implementation, after login, i am getting a forbidden response from the server. How to login using custom login implementation?
+Ans: https://www.javainterviewpoint.com/spring-security-custom-login/
+   -> create a rest api which would be accepting the "/api/login" api call
+   -> in this rest api, redirect the incoming call to the customLogin.html page which will ask user to login to get access the secure site.
+   -> once user provide the right credential, automatically spring will redirect user to the secure page which he wanted to access or to the home page if he is
+     directly accessing through the login page.
+Q) How can we logout our session in Spring security?
+Ans: In normal term, if we will call /logout call, then spring itself consider user want to logout the session. and by default it will redirect the page to the
+   login page after clearing the session.
+   code example:
+         http.authorizeRequests()
+             ...
+             .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))   // this one is used in the this application. and here after logout
+		     .invalidateHttpSession(true);                                                // page will redirect to login page by default.
+		       -- OR --
+		  //...
+			.logout()
+			.logoutSuccessUrl("/afterlogout.html")                 // this can be login page also.. so use "/login" which will be taken care by spring itself.
+		  //...
+
+Q) GUI file is coming as NOT FOUND in the browser in the spring v5 REST application without using any xml file(like web.xml or spring configuration xml file). 
+  Stackoverflow link: https://stackoverflow.com/questions/56343959/gui-file-is-coming-as-not-found-in-the-browser-in-the-spring-v5-rest-application
+  Code which impact the mapping for the Dispatcher servlet:
+    public class SpringMvcInitializer 
+	extends AbstractAnnotationConfigDispatcherServletInitializer {
+	
+	    @Override
+	    protected Class<?>[] getRootConfigClasses() {
+	        return new Class[] { SecurityConfig.class, DbConfiguration.class };
+	    }
+	
+	    @Override
+	    protected Class<?>[] getServletConfigClasses() {
+	        return null;
+	    }
+	
+	    @Override
+	    protected String[] getServletMappings() {
+	        return new String[] { "/" };
+	    }
+	
+	}
+Ans: I thought, instead of "/" i was trying to use "/rest" which is class level requestMapping for the controller in the getServletMappings(). So that url
+   without containing "rest" will not go though dispatcherServlet and serve the request for the UI pages and URL containing "/rest" will be mapped for the
+   controller method. But it didn't work.
+   After many hit and try i finally got the solution: What i tried is, I have created a prefix for the incoming URL. and using this prefix string in the 
+   getServletMappings() method. Now if i will try to access the controller resource using this prefix string in the URL, it will work fine and in the same way
+   if i will use the URL for the UI pages without without using prefix string it will also worked fine.
+   -> Way to add prefix in the URL:
+   -> add application.properties file in the resources folder with content where "/api/*" is prefix string.
+      server.contextPath=/api/*
+   -> Now if we are having a URL "http:localhost:8080/project_name/register_api" for the controller, then this URL will become  
+         "http://localhost:8080/project_name/api/register_api"
+   -> and URL for the UI page index.html is:
+         "http://localhost:8080/project_name/index.html"
+  
+		     
 Q) how to create a custom Spring-based UserDetailsService backed by persistent data.
 Ans: https://www.baeldung.com/spring-security-authentication-with-a-database
+
 
 
 ==================== Learning ---------------

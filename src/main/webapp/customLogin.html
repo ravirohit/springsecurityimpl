@@ -6,9 +6,15 @@
 </head>
 <body>
 <h3>Custom login page</h3>
-<input type="text" name ="username"/><br/><br/>
-<input type="password" name="password"><br/><br/>
-<input type ="submit" value = "submit button"/>
+<form action="api/login" method="post">
+	<input type="text" id="username" name="username"/><br/><br/>
+	<input type="password" id="password" name="password"><br/><br/>
+	 <input type="hidden" name="_csrf"
+			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" />
+	
+	 <button type="submit" class="btn">Log in</button> 
+	 
+</form>
 
 </body>
 </html>

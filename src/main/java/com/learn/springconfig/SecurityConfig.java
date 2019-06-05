@@ -1,32 +1,24 @@
 package com.learn.springconfig;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer.ExpressionInterceptUrlRegistry;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistration;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-//@EnableWebMvc                                // <mvc:annotation-driven/
+@EnableWebMvc                                // <mvc:annotation-driven/
+//@EnableTransactionManagement
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @ComponentScan(basePackages = "com.learn")   // <context:component-scan/>
@@ -50,13 +42,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
 	  http.authorizeRequests()
-		.antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")
-		.antMatchers("/api/dba/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')")
-		.and().formLogin();//.loginPage("/customLogin.html");
+	    .antMatchers("/api/welcome**","/api/login").permitAll()  // api will be accessible without authentication
+		.antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")    // api will be accessible if user is having access and this role 
+		.antMatchers("/api/dba/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')") // accessible if use is having either role.
+		.and().formLogin().loginPage("/api/login")
+		.permitAll(true)     // if use has not logged in and trying to access secure resource, then Spring will automatically redirect to login page "/login"
+		.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))  // once we call the /logout, Spring will invalidate the session and 
+		.invalidateHttpSession(true)                                              // by default redirect to the login page.
+	    .and()
+	    .csrf().disable();  // Disables CSRF protection
 		
 	}
+	/*@Bean
+	WebMvcConfigurer myWebMvcConfigurer() {
+	      return new WebMvcConfigurerAdapter() {
+	          @Override
+	          public void addViewControllers(ViewControllerRegistry registry) {
+	              ViewControllerRegistration r = registry.addViewController("/login");
+	              r.setViewName("customLogin.html");
+	          }
+	      };
+	  }*/
 	/*private void loginSuccessHandler(
         HttpServletRequest request,
         HttpServletResponse response,
