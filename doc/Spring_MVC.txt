@@ -1,7 +1,10 @@
 -------------------- Link ---------------
-https://www.javainterviewpoint.com/spring-security-custom-login/
+-> https://www.javainterviewpoint.com/spring-security-custom-login/
+-> custom daoimpl: https://www.baeldung.com/spring-security-authentication-with-a-database
+-> http://javainsimpleway.com/spring-security-using-custom-authentication-provider/
 ==============
 About:
+-> we have implemented spring 5 and hibernate 5
 -> we are creating Spring REST mvc application without use of spring-config.xml and web.xml file implementation.
 -> Concept we have implemented:
 
@@ -42,30 +45,6 @@ Ans:  @ResponseBody: for some particular controller method, if we want to return
 		}
 
 ------------------ Q&A ------------------
-Q) How can we provide custom login page?
-Ans:  http.authorizeRequests()
-          ...
-          .and().formLogin().loginPage("login.html")
-Q) for custom login page implementation, after login, i am getting a forbidden response from the server. How to login using custom login implementation?
-Ans: https://www.javainterviewpoint.com/spring-security-custom-login/
-   -> create a rest api which would be accepting the "/api/login" api call
-   -> in this rest api, redirect the incoming call to the customLogin.html page which will ask user to login to get access the secure site.
-   -> once user provide the right credential, automatically spring will redirect user to the secure page which he wanted to access or to the home page if he is
-     directly accessing through the login page.
-Q) How can we logout our session in Spring security?
-Ans: In normal term, if we will call /logout call, then spring itself consider user want to logout the session. and by default it will redirect the page to the
-   login page after clearing the session.
-   code example:
-         http.authorizeRequests()
-             ...
-             .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))   // this one is used in the this application. and here after logout
-		     .invalidateHttpSession(true);                                                // page will redirect to login page by default.
-		       -- OR --
-		  //...
-			.logout()
-			.logoutSuccessUrl("/afterlogout.html")                 // this can be login page also.. so use "/login" which will be taken care by spring itself.
-		  //...
-
 Q) GUI file is coming as NOT FOUND in the browser in the spring v5 REST application without using any xml file(like web.xml or spring configuration xml file). 
   Stackoverflow link: https://stackoverflow.com/questions/56343959/gui-file-is-coming-as-not-found-in-the-browser-in-the-spring-v5-rest-application
   Code which impact the mapping for the Dispatcher servlet:
@@ -101,11 +80,46 @@ Ans: I thought, instead of "/" i was trying to use "/rest" which is class level 
          "http://localhost:8080/project_name/api/register_api"
    -> and URL for the UI page index.html is:
          "http://localhost:8080/project_name/index.html"
-  
-		     
+
+Q) How can we provide custom login page?
+Ans:  http.authorizeRequests()
+          ...
+          .and().formLogin().loginPage("/api/login")   // in this api we are redirecting the call to the customLogin.html page.
+          
+Q) for custom login page implementation, after login, i am getting a forbidden response from the server. How to login using custom login implementation?
+Ans: https://www.javainterviewpoint.com/spring-security-custom-login/
+   -> create a rest api which would be accepting the "/api/login" api call
+   -> in this rest api, redirect the incoming call to the customLogin.html page which will ask user to login to get access the secure site.
+   -> once user provide the right credential, automatically spring will redirect user to the secure page which he wanted to access or to the home page if he is
+     directly accessing through the login page.
+   -> Somehow making call to login api "/api/login" from the customLogin.html page, it doesn't call the api while it is taken care by spring itself. 
+      login page url: 
+               http://localhost:8080/springsecurityimpl/customLogin.html
+      it check the credential from inmemory and if it is alright, it will redirect to the home page: 
+                http://localhost:8080/springsecurityimpl/
+      if credential is wrong it will be redirected to the api:
+                http://localhost:8080/springsecurityimpl/api/login?error
+      if this error redirect page is not defined at the server then finally earlier page will be appear to the user:
+                http://localhost:8080/springsecurityimpl/customLogin.html
+                
+Q) How can we logout our session in Spring security?
+Ans: In normal term, if we will call /logout call, then spring itself consider user want to logout the session. and by default it will redirect the page to the
+   login page after clearing the session.
+   code example:
+         http.authorizeRequests()
+             ...
+             .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))   // this one is used in the this application. and here after logout
+		     .invalidateHttpSession(true);                                                // page will redirect to login page by default.
+		       -- OR --
+		  //...
+			.logout()
+			.logoutSuccessUrl("/afterlogout.html")                 // this can be login page also.. so use "/login" which will be taken care by spring itself.
+		  //...
+
 Q) how to create a custom Spring-based UserDetailsService backed by persistent data.
 Ans: https://www.baeldung.com/spring-security-authentication-with-a-database
 
+Q) Caused by: org.hibernate.AnnotationException: Use of @OneToMany or @ManyToMany targeting an unmapped class: com.learn.repository.User.authorities
 
 
 ==================== Learning ---------------

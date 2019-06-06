@@ -4,17 +4,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.learn.repository.CustomAuthenticationProvider;
+import com.learn.repository.CustomUserService;
 
 @Configuration
 @EnableWebMvc                                // <mvc:annotation-driven/
@@ -24,20 +30,32 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @ComponentScan(basePackages = "com.learn")   // <context:component-scan/>
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
  
-	
-	
 	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-	// Below way of creating user role create exception:
-	// EXCEPTION: Spring Security – There is no PasswordEncoder mapped for the id “null”   for spring < 5.0
-	  /*auth.inMemoryAuthentication().withUser("mkyong").password("123456").roles("USER");
-	  auth.inMemoryAuthentication().withUser("admin").password("123456").roles("ADMIN");
-	  auth.inMemoryAuthentication().withUser("dba").password("123456").roles("DBA");*/
-	  // Solution for the above prblm... create like below:
-		auth.inMemoryAuthentication().withUser("mkyong").password("{noop}123456").roles("USER");
-		  auth.inMemoryAuthentication().withUser("admin").password("{noop}123456").roles("ADMIN");
-		  auth.inMemoryAuthentication().withUser("dba").password("{noop}123456").roles("DBA");
-	  
+	private CustomUserService userDetailsService;
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth)
+	  throws Exception {
+	   // auth.authenticationProvider(authenticationProvider());
+		 auth.authenticationProvider(getAuthenticationProvider());
+	}
+	 
+	/*@Bean
+	public DaoAuthenticationProvider authenticationProvider() {
+	    DaoAuthenticationProvider authProvider
+	      = new DaoAuthenticationProvider();
+	    authProvider.setUserDetailsService(userDetailsService);
+	    authProvider.setPasswordEncoder(encoder());
+	    return authProvider;
+	}*/
+	 
+	@Bean
+	public CustomAuthenticationProvider getAuthenticationProvider(){
+		return new CustomAuthenticationProvider();
+	}
+	@Bean
+	public PasswordEncoder encoder() {
+	    return new BCryptPasswordEncoder(11);
 	}
 
 	@Override
