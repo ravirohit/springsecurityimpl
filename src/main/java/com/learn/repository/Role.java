@@ -14,10 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Entity
 @Table(name = "Role")
 public class Role implements GrantedAuthority{
-	   
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -26,10 +23,8 @@ public class Role implements GrantedAuthority{
 	
     private String name;
      
-  //  @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
+    @ManyToOne(cascade=CascadeType.ALL,fetch=FetchType.EAGER)
     private CustomUser user;
-    
-    
     
     public CustomUser getUser() {
 		return user;

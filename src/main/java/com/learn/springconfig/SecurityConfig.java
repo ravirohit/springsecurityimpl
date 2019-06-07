@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,14 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistration;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import com.learn.repository.CustomAuthenticationProvider;
 import com.learn.repository.CustomUserService;
 
+
+
+@Import({DbConfiguration.class})
 @Configuration
 @EnableWebMvc                                // <mvc:annotation-driven/
 //@EnableTransactionManagement
@@ -61,8 +60,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 	  http.authorizeRequests()
-	    .antMatchers("/api/welcome**","/api/login").permitAll()  // api will be accessible without authentication
-		.antMatchers("/api/admin/**").access("hasRole('ROLE_ADMIN')")    // api will be accessible if user is having access and this role 
+	    .antMatchers("/api/welcome**","/api/login","/api/logout").permitAll()  // api will be accessible without authentication
+		.antMatchers("/api/admin/**","/index.html").access("hasRole('ROLE_ADMIN')")    // api will be accessible if user is having access and this role 
 		.antMatchers("/api/dba/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')") // accessible if use is having either role.
 		.and().formLogin().loginPage("/api/login")
 		.permitAll(true)     // if use has not logged in and trying to access secure resource, then Spring will automatically redirect to login page "/login"

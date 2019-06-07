@@ -8,6 +8,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -29,7 +30,8 @@ public class CustomUser implements UserDetails {
     private String lastName;
  
     /* Spring Security related fields*/
-    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER,mappedBy = "user")
+    @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER) //,mappedBy = "user"
+    @JoinColumn(name="user_id")
     private List<Role> authorities;
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;

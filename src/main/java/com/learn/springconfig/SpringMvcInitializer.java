@@ -13,7 +13,7 @@ extends AbstractAnnotationConfigDispatcherServletInitializer {
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] { SecurityConfig.class, DbConfiguration.class}; //,ApplicationContextConfig.class 
+		return new Class[] { SecurityConfig.class };//, DbConfiguration.class}; //,ApplicationContextConfig.class 
 	}
 	
 	@Override

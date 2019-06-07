@@ -20,7 +20,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
           String username = authentication.getName();
           String password = (String) authentication.getCredentials();
-     
+          System.out.println("<<<<<<< authentication credential:"+authentication.getCredentials().toString()+"  user name:"+username);
             CustomUser user = userService.loadUserByUsername(username);
      
             if (user == null || !user.getUsername().equalsIgnoreCase(username)) {
@@ -32,7 +32,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
             }
      
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-     
+            System.out.println("username: + "+username+"  password:"+password+"   auth:"+user.getAuthorities());
             return new UsernamePasswordAuthenticationToken(user, password, authorities);
     }
  

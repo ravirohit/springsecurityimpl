@@ -1,12 +1,70 @@
+==============
+About:
+-> we have implemented spring 5 and hibernate 5
+-> database: mysql work bench 6.3
+-> we are creating Spring REST mvc application without use of spring-config.xml and web.xml file implementation.
+-> Concept we have implemented: 
+
 -------------------- Link ---------------
 -> https://www.javainterviewpoint.com/spring-security-custom-login/
 -> custom daoimpl: https://www.baeldung.com/spring-security-authentication-with-a-database
 -> http://javainsimpleway.com/spring-security-using-custom-authentication-provider/
-==============
-About:
--> we have implemented spring 5 and hibernate 5
--> we are creating Spring REST mvc application without use of spring-config.xml and web.xml file implementation.
--> Concept we have implemented:
+
+---------------- api link --------------------
+http://localhost:8080/springsecurityimpl/customLogin.html
+http://localhost:8080/springsecurityimpl/index.html       // will be accessible only if we login to the login page
+http://localhost:8080/springsecurityimpl/api/admin         // will be accessible only if we login to the login page
+http://localhost:8080/springsecurityimpl/api/welcome      // will be accessible from browser event without login to the login page
+http://localhost:8080/springsecurityimpl/api/login        // to implement custom login page
+http://localhost:8080/springsecurityimpl/api/logout       // to implement custom logout functionality
+
+--------------------- Steps of learning spring security ---------------------------
+-> create a sample for spring security with inmemory design -> create some secure rest api and unsecure api ->try to access it from browser, for un
+   secure api, it will be accessible and for secure api it will redirect to the login page(which is provided by spring it self) and after login we 
+   can access the secure api based on role -> we can call logout api also which is provided by spring itself we don't have to create this api. when we 
+   call logout api(<localhost:8080/project-name/logout>), again spring will redirect the page to the login screen.
+-> Once above all steps are working fine, then we will create few ui page. now we will try to access ui page as well as REST api. we will observe, we are 
+   only able to access REST api only but not able to access the GUI page(not found).
+   Solution: we will create a prefix for the REST api call. here it is /api/* by create application.properties file in resources folder. and put the 
+             same prefix in the file SpringMvcInitializer.java for servlet mapping.
+    Now all the api call with "/api" in the url will go through dispatcherServlet and map to REST api. and without url without /api will be used for the
+    GUI page:
+    Example for URL:
+    for GUI:  http://localhost:8080/<project_name>/myhomepage.html
+    for REST: http://localhost:880/<project_name>/api/register
+-> implement a custom login page: we will create a custom login page like here: customLogin.html and one REST api /login which will be redirecting the 
+                                  incoming call to customLogin.html page. even submit button of customLogin.html will be calling to /api/login api.
+   -> also update the same login api in the SecurityConfig.java configure(HttpSecurity http) method for custom formLogin URL. So whenever we will access
+      to the secure api, spring fw will redirect call to .../api/login api which will redirect call to the customLogin.html page and once we will
+      provide right credential, then the call will go the the secure api which we were accessing.
+   -> if we will directly open the customLogin.html page and provide the right credential, then next it will open the home page(index.html)
+-> implementation of logout button: here we will create a /logout api where we will delete session and redirect the api call to login page as below:
+                       @RequestMapping(value="/logout", method=RequestMethod.GET)  
+					    public void logoutPage(HttpServletRequest request, HttpServletResponse response) throws IOException {  
+					        Authentication auth = SecurityContextHolder.getContext().getAuthentication();  
+					        if (auth != null){      
+					           new SecurityContextLogoutHandler().logout(request, response, auth);  
+					        }  
+					         //return "redirect:/";
+					        response.sendRedirect("/springsecurityimpl/customLogin.html");
+					     }  
+-> implementation of authentication using database instead inmemory:
+                                                     -> created a CustomUser.java entity class which implements UserDetails interface. just to make sure, CustomUser.java Entity class
+      has needed member variable which was needed by spring security fw.
+   -> Create a class CustomAuthenticationProvider.java implementing Spring interface AuthenticationProvider as done in this project;
+   -> Create a class CustomUserService.java which implements UserDetailsService interface as done here. This is used by CustomAuthenticationProvider.java
+      to fetch the user details from the database. we are implementing  UserDetailsService to this class just to make sure, CustomUser.java Entity class
+      has needed member variable which was needed by spring security fw. As, return type should be of type UserDetails or class which implements it.
+   -> Most important thing is to register our custom CustomAuthenticationProvider to the Spring AuthenticationManagerBuilder which is done in the file
+      SecurityConfig.java
+   -> NOTE: don't forget to add entity class(CustomUser.java) in the DbConfiguration.java, so that this class will be scanned for treated as Entity class.
+   -> AuthenticationProvider: An AuthenticationProvider is an abstraction for fetching user information from a specific repository (like a database, 
+                              LDAP, custom third party source, etc. ). It uses the fetched user information to validate the supplied credentials.
+                -> when multiple authentication providers are defined, the providers will be queried in the order they’re declared.
+    
+    
+    
+- 
 
 ------------------ Annotation Used ---------------
 @RestController, @Controller, @ResponseBody, @PathParam, @RequestParam,
@@ -120,8 +178,22 @@ Q) how to create a custom Spring-based UserDetailsService backed by persistent d
 Ans: https://www.baeldung.com/spring-security-authentication-with-a-database
 
 Q) Caused by: org.hibernate.AnnotationException: Use of @OneToMany or @ManyToMany targeting an unmapped class: com.learn.repository.User.authorities
+Ans: reason: we have not added entity class where to be scanned.
 
+Q) exception is org.hibernate.HibernateException: Could not obtain transaction-synchronized Session for current thread.
+Ans: this is because i have not added @Transactional as class repository level.
 
+Q) As we know, Spring @ComponentScan, @Autowired and @Component annotation are enough for the bean component to be managed by spring. So what is use of
+   @Bean annotation and when to use to.
+Ans: i beleive, if we have to inject the bean with autowired in than case, the bean should must have no-paramerized constructor. if the bean class is 
+   having parameterized constructor in that case, we can't inject directly with @Autowired. So what we can do is we can inject the bean using @Bean 
+   annotation.
+Q) How to handle multiple configuration class in spring?
+Ans: there is two ways:
+   one solution: import all the configuration class on top of one configuration class and add this class in SpringMvcInitializer.java
+                 Example: @Import({DbConfiguration.class})        // done in SecurityConfig.java
+   Solution two: create all the configuration class add them individually in the file SpringMvcInitializer.java as it takes array of class.
+   
 ==================== Learning ---------------
 RestTemplate: it is template provided by spring to make a rest api call.
     Example: 
