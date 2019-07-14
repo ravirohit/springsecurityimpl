@@ -17,6 +17,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
     @Autowired
     private CustomUserService userService;
    
+    @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
           String username = authentication.getName();
           String password = (String) authentication.getCredentials();

@@ -12,11 +12,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.learn.repository.CustomAuthenticationProvider;
 import com.learn.repository.CustomUserService;
+import com.learn.repository.CustomUsernamePasswordAuthenticationFilter;
 
 
 
@@ -68,9 +70,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))  // once we call the /logout, Spring will invalidate the session and 
 		.invalidateHttpSession(true)                                              // by default redirect to the login page.
 	    .and()
+	    .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
 	    .csrf().disable();  // Disables CSRF protection
 		
 	}
+	@Bean
+    public CustomUsernamePasswordAuthenticationFilter authenticationFilter() throws Exception {
+		CustomUsernamePasswordAuthenticationFilter authenticationFilter
+            = new CustomUsernamePasswordAuthenticationFilter();
+       // authenticationFilter.setAuthenticationSuccessHandler(this::loginSuccessHandler);
+        // authenticationFilter.setAuthenticationFailureHandler(this::loginFailureHandler);
+        authenticationFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
+        authenticationFilter.setAuthenticationManager(authenticationManagerBean());
+        return authenticationFilter;
+    }
 	/*@Bean
 	WebMvcConfigurer myWebMvcConfigurer() {
 	      return new WebMvcConfigurerAdapter() {

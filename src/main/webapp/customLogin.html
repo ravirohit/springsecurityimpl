@@ -5,19 +5,23 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>Custom login page</h3>
-<form action="api/login" method="post">
-	<input type="text" id="username" name="username"/><br/><br/>
-	<input type="password" id="password" name="password"><br/><br/>
-	 <input type="hidden" name="_csrf"
-			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" />
-	 <button type="submit" class="btn">Log in</button> 
-</form>
-<br/><br/>
-<h4> click Register User... then your credential will be .... username: admin and passsword: passoword</h4>
-  <form action="api/save" method="get">
+<h4> ------------- Register User ----------------</h4>
+  <form action="api/save" method="post">   <!-- for submit form data in case of GET method.. all data will go as query param-->
+ 	 <input type="text" id="username" name="uname"/><br/><br/>
+	 <input type="password" id="password" name="pwd"><br/><br/>
+	 <!-- <input type="hidden" name="_csrf"
+			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" /> -->
 	 <button type="submit" class="btn">Register User</button> 
   </form>
+ <br/><br/>
+<h3>------------- Login User -----------------</h3>
+<form action="api/login" method="post">      <!-- for submit form data in case of POST method.. all data will go as request payload-->
+	<input type="text" id="username" name="uname"/><br/><br/>
+	<input type="password" id="password" name="pwd"><br/><br/>
+	 <!-- <input type="hidden" name="_csrf"
+			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" /> -->
+	 <button type="submit" class="btn">Log in</button> 
+</form>
 
 </body>
 </html>

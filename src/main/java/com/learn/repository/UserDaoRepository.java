@@ -18,13 +18,11 @@ public class UserDaoRepository {
     private SessionFactory sessionFactory;
 	
 	
-	public void saveUser(CustomUser user1){
+	public void saveUser(CustomUser user){
 		System.out.println("saving user to the db");
-		CustomUser user = new CustomUser();
+		//CustomUser user = new CustomUser();
         user.setFirstName("admin");
         user.setLastName("kumar");
-        user.setUsername("admin");
-        user.setPassword("password");
         Role r = new Role();
         r.setName("ROLE_ADMIN");
         List<Role> roles = new ArrayList<Role>();
@@ -37,7 +35,7 @@ public class UserDaoRepository {
 		System.out.println("getting user to the db");
 		//Long id = (Long) sessionFactory.getCurrentSession().load(user);
 		Criteria criteria = sessionFactory.getCurrentSession().createCriteria(CustomUser.class);
-		CustomUser user = (CustomUser) criteria.add(Restrictions.eq("username", "admin"))
+		CustomUser user = (CustomUser) criteria.add(Restrictions.eq("uname",name))
 		                             .uniqueResult();
 		System.out.println("user got:"+user);
 		return user;
