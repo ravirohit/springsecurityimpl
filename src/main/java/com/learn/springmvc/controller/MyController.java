@@ -1,20 +1,29 @@
 package com.learn.springmvc.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
+import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.learn.model.UploadFile;
+import com.learn.repository.CustomUserService;
 
 @RestController
 //@RequestMapping("/rest")
@@ -26,6 +35,26 @@ public class MyController {
 		System.out.println("loging page method called");
 		return  "login done";
 	}*/
+	@Autowired
+	CustomUserService customUserService;
+	@Autowired
+    private HttpServletRequest request;
+	
+	@PostMapping(value="/save",produces="application/json")
+	public void saveUser(HttpServletRequest request, HttpServletResponse response){
+		String requestBody = null;
+		try{
+			requestBody = IOUtils.toString(request.getReader());
+			System.out.println("save user resources get called, requestbody:"+requestBody);
+			System.out.println(requestBody.toString());
+			customUserService.saveUser(requestBody);
+			response.sendRedirect("/springsecurityimpl/customLogin.html");
+		}	
+		catch(Exception e){
+			System.out.println("Exception occur: "+e);
+		}
+	}
+	
 	@GetMapping(value= { "/welcome**" }, produces = "application/json")    
     public ZonedDateTime currentTime(){
         System.out.println("currentTime: ZoneDate time:"+ZonedDateTime.now());
@@ -50,5 +79,43 @@ public class MyController {
 			e.printStackTrace();
 		}
 	}
-	
+	@RequestMapping(value="/logout", method=RequestMethod.GET)  
+    public void logoutPage(HttpServletRequest request, HttpServletResponse response) throws IOException {  
+		System.out.println("----- logout api getcalled: -----------");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();  
+        if (auth != null){      
+           new SecurityContextLogoutHandler().logout(request, response, auth);  
+        }  
+         //return "redirect:/";
+        response.sendRedirect("/springsecurityimpl/customLogin.html");
+     }  
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+	public String submit(@RequestParam("file") MultipartFile file) {
+		System.out.println("upload file resource get called:"+file+"    size: "+file.getSize());
+		if (!file.isEmpty()) {
+            try {
+                String uploadsDir = "/uploads/";
+                String realPathtoUploads =  request.getServletContext().getRealPath(uploadsDir);
+                System.out.println("path where file will be uploaded:"+realPathtoUploads);
+                if(! new File(realPathtoUploads).exists())
+                {
+                    new File(realPathtoUploads).mkdir();
+                }
+                String orgName = file.getOriginalFilename();
+                String filePath = realPathtoUploads + orgName;
+                File dest = new File(filePath);
+                file.transferTo(dest);
+            }catch(Exception e){
+            	System.out.println("Exception occur while uploading file:"+e);
+            	return "Server internal Error. Please try after sometimes!";
+            }
+		}
+	    return "File uploaded Successfully";
+	}
+	@RequestMapping(value = "/uploadFilewithinfo", method = RequestMethod.POST)
+	public String submit(@ModelAttribute UploadFile uploadFile) {
+		System.out.println(" uploadFile resource get called:"+uploadFile);
+		
+	    return "File uploaded Successfully";
+	}
 }

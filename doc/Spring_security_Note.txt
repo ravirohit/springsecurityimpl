@@ -1,0 +1,51 @@
+===================== url from this app ============
+-> for public welcome page:
+	http://localhost:8080/springsecurityimpl/api/welcome        // require no credential
+-> for login page using postman:
+   http://localhost:8080/springsecurityimpl/api/login
+   Request payload:
+        {
+			"uname":"admin",
+			"pwd":"password"
+	 	}
+	 	
+================================ NOTE ===================
+AbstractSecurityWebApplicationInitializer:This class implements Spring's WebApplicationInitializer. That means the concrete implementations of this 
+                   abstract class will be initialized by SpringServletContainerInitializer given that the spring-web module is on classpath. 
+				-> AbstractSecurityWebApplicationInitializer registers the DelegatingFilterProxy to use the springSecurityFilterChain before 
+				   any other registered Filter.
+                -> The onStartup() method of this class, creates an instance of AnnotationConfigWebApplicationContext which registers client side 
+                    @Configuration classes with it and bootstraps Spring container.
+                -> code example: 
+                   public class AppSecurityInitializer extends AbstractSecurityWebApplicationInitializer {
+					  public AppSecurityInitializer() {
+					      super(MyAppConfig.class);
+					  }
+					}
+			   -> Note that, it's not necessary to call super(MyAppConfig.class) from the constructor, if our configuration class is already registered 
+			      via DispatcherServlet (if it's Spring MVC application)
+-> DelegatingFilterProxy:The DelegatingFilterProxy is a servlet filter that allows passing control to Filter classes that have access to the Spring 
+                  application context. 
+-> @EnableWebSecurity: This annotation is used on our configuration class to important necessary Spring security configuration. 
+               -> Example: 
+                    @Import({ WebSecurityConfiguration.class, SpringWebMvcImportSelector.class })
+					@EnableGlobalAuthentication
+					@Configuration
+					public @interface EnableWebSecurity {
+					 ....
+					}
+-> WebSecurityConfigurerAdapter: it is implemented by the client application (usually by @Configuration class) to customize WebSecurity and HttpSecurity.
+-> WebMvcConfigurerAdapter: This is an abstract class that implements the WebMvcConfigurer interface and contains empty implementations for all the methods 
+                inherited like resolvers, interceptors and more.
+              -> Java 8 added the concept of default methods in interfaces. So,  the WebMvcConfigurer interface, starting with Spring 5, contains default 
+                 implementations for all its methods. As a result, the abstract adapter class was marked as deprecated.
+                       
+                            
+
+-> AbstractAnnotationConfigDispatcherServletInitializer:
+
+
+					
+					
+					
+					
