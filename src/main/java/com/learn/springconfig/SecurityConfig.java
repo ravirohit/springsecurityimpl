@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.learn.repository.CustomAuthenticationProvider;
@@ -62,7 +63,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 	  http.authorizeRequests()
-	    .antMatchers("/api/welcome**","/api/login","/api/logout").permitAll()  // api will be accessible without authentication
+	    .antMatchers("/api/welcome**","/api/uploadFile","/api/login","/api/logout").permitAll()  // api will be accessible without authentication
 		.antMatchers("/api/admin/**","/index.html").access("hasRole('ROLE_ADMIN')")    // api will be accessible if user is having access and this role 
 		.antMatchers("/api/dba/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')") // accessible if use is having either role.
 		.and().formLogin().loginPage("/api/login")
@@ -84,6 +85,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationFilter.setAuthenticationManager(authenticationManagerBean());
         return authenticationFilter;
     }
+	@Bean(name = "multipartResolver")
+	public CommonsMultipartResolver multipartResolver() {
+	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+	    multipartResolver.setMaxUploadSize(100000);    // if we will try to upload file whose size is greater than this. it will throw exception.
+	    return multipartResolver;
+	}
 	/*@Bean
 	WebMvcConfigurer myWebMvcConfigurer() {
 	      return new WebMvcConfigurerAdapter() {

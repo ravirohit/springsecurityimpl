@@ -19,10 +19,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
    
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-          String username = authentication.getName();
+          String username = authentication.getName();  // or authentication.getPrincipal();
           String password = (String) authentication.getCredentials();
           System.out.println("<<<<<<< authentication credential:"+authentication.getCredentials().toString()+"  user name:"+username);
-            CustomUser user = userService.loadUserByUsername(username);
+          CustomUser user = userService.loadUserByUsername(username);
      
             if (user == null || !user.getUsername().equalsIgnoreCase(username)) {
                 throw new BadCredentialsException("Username not found.");

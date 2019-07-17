@@ -30,7 +30,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
             UsernamePasswordAuthenticationToken token = null;
             if(requestBody.toString().indexOf('{') >= 0 ) {
                authRequest = objectMapper.readValue(requestBody, LoginRequest.class);  
-               uname = authRequest.getUname();
+               uname = authRequest.getUname();    
                pwd = authRequest.getPwd();
                token = new UsernamePasswordAuthenticationToken(authRequest.getUname(), authRequest.getPwd());
             }
@@ -51,7 +51,9 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 									"pwd":"password"
 								 }
             * */
- 
+            /* if  we will not customize the userNamePasswordAuthenticationToken then Spring consider the incoming request is POST and two parameter
+             * is username and password. and if we are having other name than that then we have to customize it and create our onw authentication
+             * object as done here  */
             token = new UsernamePasswordAuthenticationToken(uname, pwd);
  
             // Allow subclasses to set the "details" property

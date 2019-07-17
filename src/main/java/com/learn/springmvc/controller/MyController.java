@@ -1,5 +1,6 @@
 package com.learn.springmvc.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -13,11 +14,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.learn.model.UploadFile;
 import com.learn.repository.CustomUserService;
 
 @RestController
@@ -32,6 +37,8 @@ public class MyController {
 	}*/
 	@Autowired
 	CustomUserService customUserService;
+	@Autowired
+    private HttpServletRequest request;
 	
 	@PostMapping(value="/save",produces="application/json")
 	public void saveUser(HttpServletRequest request, HttpServletResponse response){
@@ -82,4 +89,33 @@ public class MyController {
          //return "redirect:/";
         response.sendRedirect("/springsecurityimpl/customLogin.html");
      }  
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+	public String submit(@RequestParam("file") MultipartFile file) {
+		System.out.println("upload file resource get called:"+file+"    size: "+file.getSize());
+		if (!file.isEmpty()) {
+            try {
+                String uploadsDir = "/uploads/";
+                String realPathtoUploads =  request.getServletContext().getRealPath(uploadsDir);
+                System.out.println("path where file will be uploaded:"+realPathtoUploads);
+                if(! new File(realPathtoUploads).exists())
+                {
+                    new File(realPathtoUploads).mkdir();
+                }
+                String orgName = file.getOriginalFilename();
+                String filePath = realPathtoUploads + orgName;
+                File dest = new File(filePath);
+                file.transferTo(dest);
+            }catch(Exception e){
+            	System.out.println("Exception occur while uploading file:"+e);
+            	return "Server internal Error. Please try after sometimes!";
+            }
+		}
+	    return "File uploaded Successfully";
+	}
+	@RequestMapping(value = "/uploadFilewithinfo", method = RequestMethod.POST)
+	public String submit(@ModelAttribute UploadFile uploadFile) {
+		System.out.println(" uploadFile resource get called:"+uploadFile);
+		
+	    return "File uploaded Successfully";
+	}
 }

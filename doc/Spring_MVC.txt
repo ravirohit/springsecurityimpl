@@ -4,6 +4,7 @@ About:
 -> database: mysql work bench 6.3
 -> we are creating Spring REST mvc application without use of spring-config.xml and web.xml file implementation.
 -> Concept we have implemented: 
+-> implemented file-upload testing
 
 -------------------- Link ---------------
 -> https://www.javainterviewpoint.com/spring-security-custom-login/
@@ -11,7 +12,7 @@ About:
 -> http://javainsimpleway.com/spring-security-using-custom-authentication-provider/
 
 ---------------- api link --------------------
-http://localhost:8080/springsecurityimpl/customLogin.html
+http://localhost:8080/springsecurityimpl/customLogin.html  // has register.. login .. and file upload implementation all in one page.
 http://localhost:8080/springsecurityimpl/index.html       // will be accessible only if we login to the login page
 http://localhost:8080/springsecurityimpl/api/admin         // will be accessible only if we login to the login page
 http://localhost:8080/springsecurityimpl/api/welcome      // will be accessible from browser event without login to the login page
@@ -87,7 +88,9 @@ Ans:  @ResponseBody: for some particular controller method, if we want to return
       @RestController: now even if want to implement REST MVC architecture, still we have to use @ResponseBody on each method of the controller. which is simplified 
              by the use of @RestController. Meaning, instead of declaring @ResponseBody for each method we can provide only one annotation @RestController
              instead of @Controller on class level and it will work fine.
-          -> This feature is available from spring version 4.0 
+          -> This feature is available from spring version 4.0
+Q) what is difference between @ModelAttribute and @RequestBody in spring mvc. 
+Hint: for fileupload with other info in request payload @ModelAttribute worked while @RequestBody doesn't .
           
           
 ================= SpringSecurity =========
