@@ -16,6 +16,8 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import com.learn.model.UploadFileEntity;
+import com.learn.model.UploadJsonFile;
 import com.learn.repository.CustomUser;
 import com.learn.repository.Role;
 //import com.learn.repository.User;
@@ -55,7 +57,7 @@ public class DbConfiguration {
       props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
 
       factoryBean.setHibernateProperties(props);
-      factoryBean.setAnnotatedClasses(CustomUser.class,Role.class);
+      factoryBean.setAnnotatedClasses(CustomUser.class,Role.class,UploadFileEntity.class,UploadJsonFile.class);
       //factoryBean.setAnnotatedPackages("com.learn");
       return factoryBean;
    }

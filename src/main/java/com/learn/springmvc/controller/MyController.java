@@ -10,12 +10,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,7 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.learn.model.UploadFile;
+import com.learn.model.UploadFileEntity;
+import com.learn.model.UploadJsonFile;
 import com.learn.repository.CustomUserService;
+import com.learn.service.FileOperationService;
 
 @RestController
 //@RequestMapping("/rest")
@@ -37,6 +43,9 @@ public class MyController {
 	}*/
 	@Autowired
 	CustomUserService customUserService;
+	@Autowired
+	FileOperationService fileOperationService;
+	
 	@Autowired
     private HttpServletRequest request;
 	
@@ -89,7 +98,7 @@ public class MyController {
          //return "redirect:/";
         response.sendRedirect("/springsecurityimpl/customLogin.html");
      }  
-	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)  // this is FORM submit from client only FILE data
 	public String submit(@RequestParam("file") MultipartFile file) {
 		System.out.println("upload file resource get called:"+file+"    size: "+file.getSize());
 		if (!file.isEmpty()) {
@@ -112,10 +121,30 @@ public class MyController {
 		}
 	    return "File uploaded Successfully";
 	}
-	@RequestMapping(value = "/uploadFilewithinfo", method = RequestMethod.POST)
+	@RequestMapping(value = "/uploadFilewithinfo", method = RequestMethod.POST)  // this is FORM submit from client File and other info
 	public String submit(@ModelAttribute UploadFile uploadFile) {
-		System.out.println(" uploadFile resource get called:"+uploadFile);
+		System.out.println(" uploadFile resource get called:"+uploadFile.getName()+"  email:"+uploadFile.getEmail()+" file:"+uploadFile.getFile());
+		fileOperationService.storeFile(uploadFile);
+		
 		
 	    return "File uploaded Successfully";
 	}
+	@GetMapping("/downloadFileWithInfo/{email}")  // return response in JSON
+	public UploadFileEntity downloadFile(@PathVariable("email") String email){
+		System.out.println("download file for email:"+email);
+		return fileOperationService.getFile(email);
+	}
+	//@PostMapping("/uploadjsonfile")
+	@RequestMapping(value = "/uploadjsonfile", consumes = "application/json", method = RequestMethod.POST)
+	public String uploadjsonfile(@RequestBody UploadJsonFile uploadJsonFile){
+		System.out.println("upload file:"+uploadJsonFile);
+		fileOperationService.storeJsonFile(uploadJsonFile);
+		return "json file request uploaded successfully";
+	}
+	@GetMapping("/downloadjsonfilewithinfo/{email}")  // return response in JSON
+	public UploadJsonFile downloadJsonFile(@PathVariable("email") String email){
+		System.out.println("download jsonfile for email:"+email);
+		return fileOperationService.getJsonFile(email);
+	}
+	
 }

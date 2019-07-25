@@ -3,9 +3,10 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+<script src="login.js"></script>
 </head>
 <body>
-<h4> ------------- Register User ----------------</h4>
+<h4> ------------------ Register User -------------------</h4>
   <form action="api/save" method="post">   <!-- for submit form data in case of GET method.. all data will go as query param-->
  	 <input type="text" id="username" name="uname" placeholder="Enter username"/><br/><br/>
 	 <input type="password" id="password" name="pwd" placeholder="Enter password"><br/><br/>
@@ -14,7 +15,17 @@
 	 <button type="submit" class="btn">Register User</button> 
   </form>
  <br/><br/>
- <h3>------------- File Upload -----------------</h3>
+
+<h3>---------------------- Login User ------------------------</h3>
+<form action="api/login" method="post">      <!-- for submit form data in case of POST method.. all data will go as request payload-->
+	<input type="text" id="username" name="uname" placeholder="Enter username"/><br/><br/>
+	<input type="password" id="password" name="pwd" placeholder="Enter password"><br/><br/>
+	 <!-- <input type="hidden" name="_csrf"
+			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" /> -->
+	 <button type="submit" class="btn">Log in</button> 
+</form>
+<br/><br/> 
+ <h3>----------------- Form File Upload ---------------------</h3>
  <form action="api/uploadFile" method="post" enctype="multipart/form-data">   <!-- for submit form data in case of GET method.. all data will go as query param-->
 	 <h4>select file:- </h4><input type="file" name="file" /> <br/> 
 	 <!-- <input type="hidden" name="_csrf"
@@ -23,7 +34,7 @@
   </form>
  <br/><br/>
  <br/><br/>
- <h3>------------- File Upload with information -----------------</h3>
+ <h3>-------------  Form File Upload with information -----------------</h3>
  <form action="api/uploadFilewithinfo" method="post" enctype="multipart/form-data">   <!-- for submit form data in case of GET method.. all data will go as query param-->
     <input type="text" id="name" name="name" placeholder="Enter name"/><br/><br/>
 	 <input type="text" id="email" name="email" placeholder="Enter email"><br/><br/>
@@ -33,15 +44,23 @@
 	 <br/><button type="submit" class="btn">Upload</button> 
   </form>
  <br/><br/>
-<h3>------------- Login User -----------------</h3>
-<form action="api/login" method="post">      <!-- for submit form data in case of POST method.. all data will go as request payload-->
-	<input type="text" id="username" name="uname" placeholder="Enter username"/><br/><br/>
-	<input type="password" id="password" name="pwd" placeholder="Enter password"><br/><br/>
-	 <!-- <input type="hidden" name="_csrf"
-			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" /> -->
-	 <button type="submit" class="btn">Log in</button> 
-</form>
-
-
+ <h3>------------------ Download Img file with other info in JSON in JS (uploaded by form) -------------------</h3>
+ <input type="text" id="usrFormEmail" name="usrFormEmail" placeholder="Enter email to download img"><br/>
+ <button onclick="downloaFormUploadeddFile()"> Download form uploaded image </button> 
+ <br/><br/>
+ <img id="downloadFormImg" src="" />
+ <br/><br/>
+ <h3>------------------ Json Upload Img file with other info in JSON in JS -------------------</h3>
+     <input type="text" id="imgName" name="imgName" placeholder="Enter File name"/><br/><br/>
+	 <input type="text" id="usrEmail" name="usrEmail" placeholder="Enter user email"><br/><br/>
+	 <h4>select file:- </h4><input type="file" id="file" name="file" /> <br/>
+	 <br/><button type="submit" onclick="jsonUpload()">Upload</button>
+<br/><br/> 
+ <h3>------------------ Download Img file with other info in JSON in JS(uploaded by JS) -------------------</h3>
+ <input type="text" id="usrJsonEmail" name="usrJsonEmail" placeholder="Enter email to download img"><br/>
+ <button onclick="downloaJsonUploadeddFile()"> Download json uploaded image </button> 
+ <br/><br/>
+ <img id="downloadJsonImg" src="" />
+ 
 </body>
 </html>

@@ -40,9 +40,20 @@ AbstractSecurityWebApplicationInitializer:This class implements Spring's WebAppl
               -> Java 8 added the concept of default methods in interfaces. So,  the WebMvcConfigurer interface, starting with Spring 5, contains default 
                  implementations for all its methods. As a result, the abstract adapter class was marked as deprecated.
                        
-                            
-
+                           
 -> AbstractAnnotationConfigDispatcherServletInitializer:
+
+--------------------------------------------- Q&A ---------------
+Q) I want to make a ajax/javascript fetch post call, But I am getting 403 error. But GET works perfectly fine.
+Ans: Using Spring Security with Java configuration, CSRF protection is enabled by default. In this context, if you make an Ajax request 
+    to a REST endpoint using POST method, you will get a csrf token missing error.
+  -> To solve this, there are two options:
+     Option 1: Disable csrf:   
+       http.csrf().disable();    // it worked for me.
+     Option 2: Add csrf to the ajax request. 
+Q) JsonMappingException: out of START_ARRAY token.
+Ans: use below operation on the reqobj:
+      reqObj = JSON.stringify(reqObj);   // print in console before and after then you will get the idea about the difference.
 
 
 					
