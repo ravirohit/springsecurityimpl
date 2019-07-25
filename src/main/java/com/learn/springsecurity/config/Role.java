@@ -1,4 +1,4 @@
-package com.learn.repository;
+package com.learn.springsecurity.config;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;

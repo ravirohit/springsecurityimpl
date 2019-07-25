@@ -6,31 +6,18 @@
 </head>
 <body>
 <h4> ------------- Register User ----------------</h4>
-  <form action="api/save" method="post">   <!-- for submit form data in case of GET method.. all data will go as query param-->
+  <form action="api/register" method="post">   <!-- for submit form data in case of GET method.. all data will go as query param-->
  	 <input type="text" id="username" name="uname" placeholder="Enter username"/><br/><br/>
 	 <input type="password" id="password" name="pwd" placeholder="Enter password"><br/><br/>
+	 <select name="role">
+		  <option value="ROLE_USER">User</option>
+		  <option value="ROLE_DBA">Dba</option>
+		  <option value="ROLE_ADMIN">Admin</option>
+	  </select>
+	 
 	 <!-- <input type="hidden" name="_csrf"
 			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" /> -->
 	 <button type="submit" class="btn">Register User</button> 
-  </form>
- <br/><br/>
- <h3>------------- File Upload -----------------</h3>
- <form action="api/uploadFile" method="post" enctype="multipart/form-data">   <!-- for submit form data in case of GET method.. all data will go as query param-->
-	 <h4>select file:- </h4><input type="file" name="file" /> <br/> 
-	 <!-- <input type="hidden" name="_csrf"
-			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" /> -->
-	 <br/><button type="submit" class="btn">Upload</button> 
-  </form>
- <br/><br/>
- <br/><br/>
- <h3>------------- File Upload with information -----------------</h3>
- <form action="api/uploadFilewithinfo" method="post" enctype="multipart/form-data">   <!-- for submit form data in case of GET method.. all data will go as query param-->
-    <input type="text" id="name" name="name" placeholder="Enter name"/><br/><br/>
-	 <input type="text" id="email" name="email" placeholder="Enter email"><br/><br/>
-	 <h4>select file:- </h4><input type="file" name="file" /> <br/> 
-	 <!-- <input type="hidden" name="_csrf"
-			value="0f8a587e-7930-46ad-bfd5-fda13c0b98d1" /> -->
-	 <br/><button type="submit" class="btn">Upload</button> 
   </form>
  <br/><br/>
 <h3>------------- Login User -----------------</h3>

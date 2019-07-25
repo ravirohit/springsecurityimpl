@@ -18,15 +18,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.learn.model.UploadFile;
-import com.learn.repository.CustomUserService;
+import com.learn.springsecurity.config.CustomUserService;
 
 @RestController
-//@RequestMapping("/rest")
+// http://localhost:8080/springsecurityimpl/customLogin.html
 public class MyController {
 	//@ResponseBody
 	// @RequestMapping(value = "/{name}.xml", method = RequestMethod.GET, produces = "application/xml")
@@ -40,35 +37,19 @@ public class MyController {
 	@Autowired
     private HttpServletRequest request;
 	
-	@PostMapping(value="/save",produces="application/json")
-	public void saveUser(HttpServletRequest request, HttpServletResponse response){
+	@PostMapping(value="/register",produces="application/json")
+	public void saveUser(HttpServletRequest request, HttpServletResponse response){  // in request we can use LoginRequest object ref also which will be mapped from request
 		String requestBody = null;
 		try{
-			requestBody = IOUtils.toString(request.getReader());
+			requestBody = IOUtils.toString(request.getReader());   // uname=rohit&pwd=rohit&role=USER
 			System.out.println("save user resources get called, requestbody:"+requestBody);
 			System.out.println(requestBody.toString());
-			customUserService.saveUser(requestBody);
+			customUserService.registerUser(requestBody);
 			response.sendRedirect("/springsecurityimpl/customLogin.html");
 		}	
 		catch(Exception e){
 			System.out.println("Exception occur: "+e);
 		}
-	}
-	
-	@GetMapping(value= { "/welcome**" }, produces = "application/json")    
-    public ZonedDateTime currentTime(){
-        System.out.println("currentTime: ZoneDate time:"+ZonedDateTime.now());
-        return ZonedDateTime.now();
-    }
-	@GetMapping(value="/admin**", produces = "application/json")
-	public ZonedDateTime secretTime() {
-		System.out.println("secretTime: ZonedDateTime.now(ZoneId.of(\"UTC\")): "+ZonedDateTime.now(ZoneId.of("UTC")));
-		return  ZonedDateTime.now(ZoneId.of("UTC"));
-	}
-	@GetMapping(value="/dba**", produces = "application/json")
-	public String dbaPage() {
-		System.out.println("ZonedDateTime.now(ZoneId.of(\"UTC\")): "+ZonedDateTime.now(ZoneId.of("UTC")));
-		return  "dbapage method called";
 	}
 	@GetMapping(value="/login")
 	public void loginRedirect(HttpServletResponse response){
@@ -89,33 +70,25 @@ public class MyController {
          //return "redirect:/";
         response.sendRedirect("/springsecurityimpl/customLogin.html");
      }  
-	@RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
-	public String submit(@RequestParam("file") MultipartFile file) {
-		System.out.println("upload file resource get called:"+file+"    size: "+file.getSize());
-		if (!file.isEmpty()) {
-            try {
-                String uploadsDir = "/uploads/";
-                String realPathtoUploads =  request.getServletContext().getRealPath(uploadsDir);
-                System.out.println("path where file will be uploaded:"+realPathtoUploads);
-                if(! new File(realPathtoUploads).exists())
-                {
-                    new File(realPathtoUploads).mkdir();
-                }
-                String orgName = file.getOriginalFilename();
-                String filePath = realPathtoUploads + orgName;
-                File dest = new File(filePath);
-                file.transferTo(dest);
-            }catch(Exception e){
-            	System.out.println("Exception occur while uploading file:"+e);
-            	return "Server internal Error. Please try after sometimes!";
-            }
-		}
-	    return "File uploaded Successfully";
+	@GetMapping(value= { "/public" }, produces = "application/json")    
+    public String publicSite(){
+        System.out.println("currentTime: ZoneDate time:"+ZonedDateTime.now());
+        return "Thank you for visiting our site! :)";
+    }
+	@GetMapping(value= { "/allinternalusers" }, produces = "application/json")     // http://localhost:8080/springsecurityimpl/api/allinternalusers
+    public String currentTime(){
+        System.out.println("currentTime: ZoneDate time:"+ZonedDateTime.now());
+        return "------- Welcome to Employee Help Portal --------";
+    }
+	@GetMapping(value="/admin", produces = "application/json")
+	public ZonedDateTime secretTime() {
+		System.out.println("secretTime: ZonedDateTime.now(ZoneId.of(\"UTC\")): "+ZonedDateTime.now(ZoneId.of("UTC")));
+		return  ZonedDateTime.now(ZoneId.of("UTC"));
 	}
-	@RequestMapping(value = "/uploadFilewithinfo", method = RequestMethod.POST)
-	public String submit(@ModelAttribute UploadFile uploadFile) {
-		System.out.println(" uploadFile resource get called:"+uploadFile);
-		
-	    return "File uploaded Successfully";
+	@GetMapping(value="/dba", produces = "application/json")
+	public String dbaPage() {
+		System.out.println("ZonedDateTime.now(ZoneId.of(\"UTC\")): "+ZonedDateTime.now(ZoneId.of("UTC")));
+		return  "dbapage method called";
 	}
+
 }

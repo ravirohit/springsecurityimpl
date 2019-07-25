@@ -1,4 +1,4 @@
-package com.learn.repository;
+package com.learn.springsecurity.config;
 
 import java.io.IOException;
 
@@ -13,6 +13,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.learn.model.LoginRequest;
 
 public class CustomUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 

@@ -16,9 +16,9 @@ import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.learn.repository.CustomUser;
-import com.learn.repository.Role;
 //import com.learn.repository.User;
+import com.learn.springsecurity.config.CustomUser;
+import com.learn.springsecurity.config.Role;
 
 
 

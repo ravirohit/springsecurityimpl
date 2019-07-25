@@ -12,12 +12,14 @@ About:
 -> http://javainsimpleway.com/spring-security-using-custom-authentication-provider/
 
 ---------------- api link --------------------
-http://localhost:8080/springsecurityimpl/customLogin.html  // has register.. login .. and file upload implementation all in one page.
-http://localhost:8080/springsecurityimpl/index.html       // will be accessible only if we login to the login page
-http://localhost:8080/springsecurityimpl/api/admin         // will be accessible only if we login to the login page
-http://localhost:8080/springsecurityimpl/api/welcome      // will be accessible from browser event without login to the login page
-http://localhost:8080/springsecurityimpl/api/login        // to implement custom login page
-http://localhost:8080/springsecurityimpl/api/logout       // to implement custom logout functionality
+http://localhost:8080/springsecurityimpl/customLogin.html      // has register.. login .. and file upload implementation all in one page.
+http://localhost:8080/springsecurityimpl/api/login             // to implement custom login page
+http://localhost:8080/springsecurityimpl/api/public            // will be accessible publicily  
+http://localhost:8080/springsecurityimpl/api/allinternalusers  // will be accessible only if user with user role
+http://localhost:8080/springsecurityimpl/index.html            // will be accessible only if user is admin role
+http://localhost:8080/springsecurityimpl/api/admin             // will be accessible only if user is admin role
+http://localhost:8080/springsecurityimpl/api/dba             // will be accessible only if user is admin or dba role
+http://localhost:8080/springsecurityimpl/api/logout            // to implement custom logout functionality
 
 --------------------- Steps of learning spring security ---------------------------
 -> create a sample for spring security with inmemory design -> create some secure rest api and unsecure api ->try to access it from browser, for un

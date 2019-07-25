@@ -1,19 +1,13 @@
-package com.learn.repository;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+package com.learn.springsecurity.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.learn.model.LoginRequest;
+import com.learn.repository.UserDaoRepository;
 
 
 // https://www.baeldung.com/spring-security-authentication-with-a-database
@@ -35,22 +29,36 @@ public class CustomUserService implements UserDetailsService {
     	
         //return userDao.loadUserByUsername(username);
     }
-    public void saveUser(String  requestBody) throws Exception{
-    	 CustomUser user = null;
+    public void registerUser(String  requestBody) throws Exception{
+    	 CustomUser user = new CustomUser();
     	 String uname=null;
     	 String pwd = null;
+    	 String roleVal = null;
+    	 Role role = new Role();
     	 if(requestBody.toString().indexOf('{') >= 0 ) {
-    		 user = objectMapper.readValue(requestBody, CustomUser.class);  
+    		 LoginRequest loginreq = objectMapper.readValue(requestBody, LoginRequest.class);
+    		 user.setUname(loginreq.getUname());
+    		 user.setPwd(loginreq.getPwd());
+    		 role.setName(loginreq.getRole());
+    		 user.getAuthorities().add(role);
+    		 
           }
           else{
-        	user = new CustomUser();
           	uname = requestBody.substring(requestBody.indexOf("=")+1, requestBody.indexOf("&"));
-          	pwd = requestBody.substring(requestBody.lastIndexOf("=")+1);
+          	requestBody=requestBody.substring(requestBody.indexOf("&")+1);
+          	System.out.println("requestbody:"+requestBody);
+          	pwd = requestBody.substring(requestBody.indexOf("=")+1, requestBody.indexOf("&"));
+          	System.out.println("requestbody:"+pwd);
+          	roleVal = requestBody.substring(requestBody.lastIndexOf("=") + 1);
+          	System.out.println("requestbody:"+roleVal);
           	user.setUname(uname);
           	user.setPwd(pwd);
+	   		role.setName(roleVal);
+	   		user.getAuthorities().add(role);
           }
     	userDaoRepository.saveUser(user);
     }
  
 }
+
 

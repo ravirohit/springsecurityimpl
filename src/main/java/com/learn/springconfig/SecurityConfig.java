@@ -17,9 +17,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-import com.learn.repository.CustomAuthenticationProvider;
-import com.learn.repository.CustomUserService;
-import com.learn.repository.CustomUsernamePasswordAuthenticationFilter;
+import com.learn.springsecurity.config.CustomAuthenticationProvider;
+import com.learn.springsecurity.config.CustomUserService;
+import com.learn.springsecurity.config.CustomUsernamePasswordAuthenticationFilter;
 
 
 
@@ -63,9 +63,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 	  http.authorizeRequests()
-	    .antMatchers("/api/welcome**","/api/uploadFile","/api/login","/api/logout").permitAll()  // api will be accessible without authentication
-		.antMatchers("/api/admin/**","/index.html").access("hasRole('ROLE_ADMIN')")    // api will be accessible if user is having access and this role 
-		.antMatchers("/api/dba/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')") // accessible if use is having either role.
+	    .antMatchers("/api/public","/api/uploadFile","api/register","/api/login","/api/logout").permitAll()  // api will be accessible without authentication
+	    .antMatchers("/api/allinternalusers").access("hasRole('ROLE_USER')")
+		.antMatchers("/api/admin","/index.html").access("hasRole('ROLE_ADMIN')")    // api will be accessible if user is having access and this role 
+		.antMatchers("/api/dba").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')") // accessible if use is having either role.
 		.and().formLogin().loginPage("/api/login")
 		.permitAll(true)     // if use has not logged in and trying to access secure resource, then Spring will automatically redirect to login page "/login"
 		.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))  // once we call the /logout, Spring will invalidate the session and 

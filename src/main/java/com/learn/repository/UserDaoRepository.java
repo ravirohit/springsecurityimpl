@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.learn.springsecurity.config.CustomUser;
+import com.learn.springsecurity.config.Role;
+
 @Repository
 @Transactional
 public class UserDaoRepository {
@@ -21,13 +24,8 @@ public class UserDaoRepository {
 	public void saveUser(CustomUser user){
 		System.out.println("saving user to the db");
 		//CustomUser user = new CustomUser();
-        user.setFirstName("admin");
-        user.setLastName("kumar");
-        Role r = new Role();
-        r.setName("ROLE_ADMIN");
-        List<Role> roles = new ArrayList<Role>();
-        roles.add(r);
-        user.setAuthorities(roles);
+        user.setFirstName("fname");
+        user.setLastName("lname");
 		Long id = (Long) sessionFactory.getCurrentSession().save(user);
 		System.out.println("user info persisted with id:"+id);
 	}

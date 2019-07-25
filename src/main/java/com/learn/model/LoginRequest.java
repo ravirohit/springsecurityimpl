@@ -1,8 +1,9 @@
-package com.learn.repository;
+package com.learn.model;
 
 public class LoginRequest {
     String uname;
     String pwd;
+    String role;
 	public String getUname() {
 		return uname;
 	}
@@ -15,5 +16,13 @@ public class LoginRequest {
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
 	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	
+	
     
 }

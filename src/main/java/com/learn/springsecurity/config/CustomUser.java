@@ -1,5 +1,6 @@
-package com.learn.repository;
+package com.learn.springsecurity.config;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -32,7 +33,7 @@ public class CustomUser implements UserDetails {
     /* Spring Security related fields*/
     @OneToMany(cascade=CascadeType.ALL,fetch=FetchType.EAGER) //,mappedBy = "user"
     @JoinColumn(name="user_id")
-    private List<Role> authorities;
+    private List<Role> authorities = null;
     private boolean accountNonExpired = true;
     private boolean accountNonLocked = true;
     private boolean credentialsNonExpired = true;
@@ -67,7 +68,8 @@ public class CustomUser implements UserDetails {
         this.lastName = lastName;
     }
     public List<Role> getAuthorities() {
-        return authorities;
+    	authorities = authorities == null ? new ArrayList<Role>(): authorities;
+    	return authorities;
     }
     public void setAuthorities(List<Role> authorities) {
         this.authorities = authorities;

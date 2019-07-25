@@ -1,4 +1,4 @@
-package com.learn.repository;
+package com.learn.springsecurity.config;
 
 import java.util.Collection;
 
