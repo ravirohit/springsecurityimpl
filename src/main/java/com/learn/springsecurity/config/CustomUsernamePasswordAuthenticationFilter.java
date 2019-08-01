@@ -19,6 +19,9 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
+	public CustomUsernamePasswordAuthenticationFilter(){
+		
+	}
 	@Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         String requestBody;
@@ -44,7 +47,8 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
             // for form submit request will throw error.
                                        // while mapper will work fine if request is sent from postman with credential as payload.
            /*Value of requestBody for form submit request: 
-            *   requestBody:  uname=admin&pwd=password
+            *   requestBody:  
+            *                 uname=admin&pwd=password
             * above way of consuming request will throw error in objectMapper statement while will work fine for below request type.
             * while for postman request with payload is:
             *   requestBody:	{

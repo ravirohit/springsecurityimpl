@@ -12,14 +12,14 @@ About:
 -> http://javainsimpleway.com/spring-security-using-custom-authentication-provider/
 
 ---------------- api link --------------------
-http://localhost:8080/springsecurityimpl/customLogin.html      // has register.. login .. and file upload implementation all in one page.
-http://localhost:8080/springsecurityimpl/api/login             // to implement custom login page
-http://localhost:8080/springsecurityimpl/api/public            // will be accessible publicily  
-http://localhost:8080/springsecurityimpl/api/allinternalusers  // will be accessible only if user with user role
-http://localhost:8080/springsecurityimpl/index.html            // will be accessible only if user is admin role
-http://localhost:8080/springsecurityimpl/api/admin             // will be accessible only if user is admin role
-http://localhost:8080/springsecurityimpl/api/dba             // will be accessible only if user is admin or dba role
-http://localhost:8080/springsecurityimpl/api/logout            // to implement custom logout functionality
+http://localhost:8080/springsecurityimpl/customLogin.html      // register users with role user, dba and admin. and login with that role to access corresponding resource.
+http://localhost:8080/springsecurityimpl/userhomepage.html     // accessible to all internal user with role user or dba or admin.
+http://localhost:8080/springsecurityimpl/dbapage.html          // accessible to all user with role dba or admin.
+http://localhost:8080/springsecurityimpl/adminpage.html        // accessible to all user with role admin.
+http://localhost:8080/springsecurityimpl/api/login             // to implement custom login page will redirect to "/customLogin.html"
+http://localhost:8080/springsecurityimpl/api/allinternalusers  // accessible to all internal user with role user or dba or admin.
+http://localhost:8080/springsecurityimpl/api/dba               // accessible to all user with role dba or admin.
+http://localhost:8080/springsecurityimpl/api/admin             // accessible to all internal user with role admin.
 
 --------------------- Steps of learning spring security ---------------------------
 -> create a sample for spring security with inmemory design -> create some secure rest api and unsecure api ->try to access it from browser, for un
