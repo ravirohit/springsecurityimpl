@@ -21,19 +21,15 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
           String username = authentication.getName();  // or authentication.getPrincipal();
           String password = (String) authentication.getCredentials();
-          System.out.println("<<<<<<< authentication credential:"+authentication.getCredentials().toString()+"  user name:"+username);
-          CustomUser user = userService.loadUserByUsername(username);
-     
-            if (user == null || !user.getUsername().equalsIgnoreCase(username)) {
-                throw new BadCredentialsException("Username not found.");
-            }
-     
-            if (!password.equals(user.getPassword())) {
-                throw new BadCredentialsException("Wrong password.");
-            }
-     
+          CustomUser user = userService.loadUserByUsername(username);     
+	     /* if (user == null || !user.getUsername().equalsIgnoreCase(username)) {  // getting checked in CustomUsernamePasswordAuthenticationFilter class
+	         throw new BadCredentialsException("Username not found.");
+	       }
+           if (!password.equals(user.getPassword())) {
+             throw new BadCredentialsException("Wrong password.");
+           }*/
             Collection<? extends GrantedAuthority> authorities = user.getAuthorities();
-            System.out.println("username: + "+username+"  password:"+password+"   auth:"+user.getAuthorities());
+            System.out.println("username: + "+username+"  password:"+password+"   auth:"+user.getAuthorities().get(0));
             return new UsernamePasswordAuthenticationToken(user, password, authorities);
     }
  

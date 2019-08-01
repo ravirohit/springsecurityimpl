@@ -19,11 +19,11 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
       HttpServletRequest request,
       HttpServletResponse response, 
       AccessDeniedException exc) throws IOException, ServletException {
-         
-        Authentication auth 
-          = SecurityContextHolder.getContext().getAuthentication();
+      /*   
+      Authentication auth 
+          = SecurityContextHolder.getContext().getAuthentication();*/
         
-  System.out.println("custom access denied handler get called");
-        response.sendRedirect("/springsecurityimpl/accessdenied.html");
+      System.out.println("custom access denied handler get called");
+      response.sendRedirect("/springsecurityimpl/accessdenied.html");
     }
 }

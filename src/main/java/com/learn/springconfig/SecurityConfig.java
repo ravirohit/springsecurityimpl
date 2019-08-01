@@ -1,6 +1,5 @@
 package com.learn.springconfig;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,14 +12,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.learn.springsecurity.config.CustomAccessDeniedHandler;
+import com.learn.springsecurity.config.CustomAuthenticationFailureHandler;
 import com.learn.springsecurity.config.CustomAuthenticationProvider;
-import com.learn.springsecurity.config.CustomUserService;
 import com.learn.springsecurity.config.CustomUsernamePasswordAuthenticationFilter;
 
 
@@ -57,8 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    .antMatchers("/api/allinternalusers","/userhomepage.html").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')")
 	    .antMatchers("/api/dba","/dbapage.html").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_DBA')") // accessible if use is having either role.
 		.antMatchers("/api/admin","/adminpage.html").access("hasRole('ROLE_ADMIN')")    // api will be accessible if user is having access and this role 
-		.and().formLogin().loginPage("/api/login")
-		.permitAll(true)     // if use has not logged in and trying to access secure resource, then Spring will automatically redirect to login page "/login"
+		.and().formLogin()//.failureHandler(customAuthenticationFailureHandler())  not need as logic written in CustomUsernamePasswordAuthenticationFilter class
+		.loginPage("/api/login")
+		.permitAll()     // if user has not logged in and trying to access secure resource, then Spring will automatically redirect to login page "/login"
 		.and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))  // once we call the /logout, Spring will invalidate the session and 
 		.invalidateHttpSession(true)                                              // by default redirect to the login page.
 	    .and()
@@ -77,7 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationFilter.setAuthenticationManager(authenticationManagerBean());
         return authenticationFilter;
     }
-	@Bean(name = "multipartResolver")
+	@Bean(name = "multipartResolver")    // will be used when we are using file upload concept.
 	public CommonsMultipartResolver multipartResolver() {
 	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
 	    multipartResolver.setMaxUploadSize(100000);    // if we will try to upload file whose size is greater than this. it will throw exception.
@@ -85,9 +86,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 	@Bean
 	public AccessDeniedHandler accessDeniedHandler(){
-		System.out.println("--------- access denied method get called --------");
 	    return new CustomAccessDeniedHandler();
 	}
+	
+	/*@Bean
+    public AuthenticationFailureHandler customAuthenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
+    }*/
 	/*@Bean
 	WebMvcConfigurer myWebMvcConfigurer() {
 	      return new WebMvcConfigurerAdapter() {

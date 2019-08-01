@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,6 +21,9 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	
+	@Autowired
+    private CustomUserService userService;
+	
 	public CustomUsernamePasswordAuthenticationFilter(){
 		
 	}
@@ -28,7 +33,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
         System.out.println("======================== Rohit custom authentication token =================");
         try {
             requestBody = IOUtils.toString(request.getReader());  // request coming from client using form method will have the parameter value as string will not be in json format
-            System.out.println("----input credential:"+requestBody.toString()); 
+            System.out.println("---- payload String for login api:"+requestBody.toString()); 
             LoginRequest authRequest = null;
             String uname = null, pwd = null;
             UsernamePasswordAuthenticationToken token = null;
@@ -59,8 +64,13 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
             /* if  we will not customize the userNamePasswordAuthenticationToken then Spring consider the incoming request is POST and two parameter
              * is username and password. and if we are having other name than that then we have to customize it and create our onw authentication
              * object as done here  */
+            
+            //////// validating request before creating object:
+            CustomUser user = userService.loadUserByUsername(uname);
+            if (user == null || (!user.getUsername().equalsIgnoreCase(uname)) || (!pwd.equals(user.getPassword()))) {
+            	response.sendRedirect("/springsecurityimpl/onFailureCustomLogin.html");
+            }
             token = new UsernamePasswordAuthenticationToken(uname, pwd);
- 
             // Allow subclasses to set the "details" property
             setDetails(request, token);
  
