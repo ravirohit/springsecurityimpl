@@ -12,14 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import com.learn.springsecurity.config.CustomAccessDeniedHandler;
-import com.learn.springsecurity.config.CustomAuthenticationFailureHandler;
 import com.learn.springsecurity.config.CustomAuthenticationProvider;
 import com.learn.springsecurity.config.CustomUsernamePasswordAuthenticationFilter;
 

@@ -3,7 +3,7 @@ package com.learn.springconfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 /*
- * Note: in the applcation, either of the file(WebServletConfiguration.java or SpringMvcInitializer.java) will fulfill the purpose of web.xml file. 
+ * Note: in the application, either of the file(WebServletConfiguration.java or SpringMvcInitializer.java) will fulfill the purpose of web.xml file. 
  *       So any one at a time can be enabled and it will work fine. 
  *       This class is enabled because WebServletConfiguration.java file is disabled if we want to disabled this file then enabled the file 
  *       WebServletConfiguration.java first*/

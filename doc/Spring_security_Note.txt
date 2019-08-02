@@ -39,10 +39,43 @@ AbstractSecurityWebApplicationInitializer:This class implements Spring's WebAppl
                 inherited like resolvers, interceptors and more.
               -> Java 8 added the concept of default methods in interfaces. So,  the WebMvcConfigurer interface, starting with Spring 5, contains default 
                  implementations for all its methods. As a result, the abstract adapter class was marked as deprecated.
-                       
-                            
-
--> AbstractAnnotationConfigDispatcherServletInitializer:
+================================= Spring security flow ==============================
+AbstractSecurityWebApplicationInitializer -> create a class extending it to let spring know, to process all incoming requet to 
+                     application by spring filter(DelegatingFilterProxy). keep this file to package which is being scanned by spring.
+dispatcherservlet:-> for detailed information: 
+                        https://howtodoinjava.com/spring5/webmvc/spring-dispatcherservlet-tutorial/ 
+                  -> where we define what pattern of request api will be taken care by dispatcherservlet to map it to resource.
+                  -> here we register the securityconfig class which need to be loaded first.
+				  -> in this config class we configure AuthenticationManagerBuilder auth and httpsecurity object.
+				  -> in AuthenticationManagerBuilder, we register "CustomAuthenticationProvider" where we authenticate the Authentication object and if it is invalid user will get then response is "unauthorized" else it will return "UsernamePasswordAuthenticationToken" object which will again used by spring whenever user tried to access the api. based on the role available in UsernamePasswordAuthenticationToken object, spring will allow user to access it or will get "forbidden" response.
+				  -> Here how can we override behaviour of 
+				         1. creation of the authentication object from custom filter processing request
+						 2. create a "unauthorized" response through our html file for invalid user
+						 3. create a "forbidden" response through our html file for having not required role.
+	1. creation of the authentication object from custom filter processing request:
+	   Ans: create a filter class UsernamePasswordAuthenticationFilter implementing UsernamePasswordAuthenticationFilter.
+	       here we override the method attemptAuthentication() which process the request and return an object of type Authentication which will finally processed by CustomAuthenticationProvider.
+		  -> to activate this custom filter we will add it to httpsecurity object as:
+		     http.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+			        and:
+		     public CustomUsernamePasswordAuthenticationFilter authenticationFilter() throws Exception { ... }
+	        NOTE: for more detail see the code 
+    2. create a "unauthorized" response through our html file for invalid user:
+	   Ans: in the method attemptAuthentication() of UsernamePasswordAuthenticationFilter, we can right the logic to check if 
+	        provided credential is right or wrong if wrong use the response object to redirect the page to the customuauthorized 
+			page and if it is right let it work as usual.
+    3. create a "forbidden" response through our html file for having not required role.
+       Ans: -> create a custom class implements AccessDeniedHandler which override handle() method.	Here we can redirect the the  
+	           response to the UI page we wants.
+			-> register the created custom class with httpSecurity object as:
+			     http.exceptionHandling().accessDeniedHandler(return new CustomAccessDeniedHandler(););
+-> Override the default spring login page to custom login page:
+    -> add the api to HttpSecurity object which will redirect the incoming call to the login UI page.
+	        http.formLogin().loginPage("/api/login") // and this api will be in permitAll() category means accessible without 
+			                                         // login
+    -> now whenever we will try to access to the api which required user to be logged in then automatically spring will redirect
+	   the user to this api. 
+	-> now in our api "/api/login", we will right a code to redirect the user to the customlogin.html page.
 
 
 					
